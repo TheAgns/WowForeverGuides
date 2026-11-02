@@ -6,6 +6,7 @@
 - `guides/paladin.html` – Human Protection Paladin
 - `guides/warlock.html` – Gnome / Human Affliction Warlock
 - `guides/druid.html` – Night Elf Druid (Cat, Bear and Balance)
+- `guides/mage.html` – Gnome Frost Mage
 - `assets/progress.js` – shared saving, reset, export and import
 
 ## Host it on GitHub Pages
