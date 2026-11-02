@@ -7,6 +7,7 @@
 - `guides/warlock.html` – Gnome / Human Affliction Warlock
 - `guides/druid.html` – Night Elf Druid (Cat, Bear and Balance)
 - `guides/mage.html` – Gnome Frost Mage
+- `guides/hunter.html` – Night Elf Beast Mastery Hunter
 - `assets/progress.js` – shared saving, reset, export and import
 
 ## Host it on GitHub Pages

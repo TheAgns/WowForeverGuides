@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hunter Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: sticky grimoire sidebar + long route column; deliberately single dark theme (forest and brass) */
+:root{
+  color-scheme:dark;
+  --bg:#11100c;--panel:#1a1812;--panel2:#232017;--line:#3a3526;
+  --ink:#ece7da;--muted:#aea795;--fel:#d4b25a;--fel-dim:#7d6a35;--violet:#8fc7a0;--ember:#e0875a;--warn:#f0c66b;
+  --display:"Marcellus","Palatino Linotype",Georgia,serif;
+  --body:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
+a{color:var(--fel)}a:hover{color:var(--ink)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--fel);outline-offset:2px}
+#topbar{height:6px;background:linear-gradient(90deg,var(--violet),var(--fel))}
+.frame{max-width:1420px;margin:auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:34px;padding-block:24px 70px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;max-height:calc(100vh - 40px);overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 15px}
+.logo{font-family:var(--display);color:var(--fel);font-size:23px;letter-spacing:.07em;line-height:1.1}
+.logo small{display:block;font-family:var(--body);font-size:11px;color:var(--muted);letter-spacing:.2em;margin:8px 0 16px}
+aside nav{display:flex;flex-direction:column}
+aside a{display:block;text-decoration:none;color:var(--ink);opacity:.85;font-size:14px;border-radius:6px;padding:6px 10px}
+aside a:hover{background:var(--panel2);color:var(--fel);opacity:1}
+.side-mini{font-size:13px;color:var(--muted);margin:18px 10px 0}
+.progressbar{height:8px;background:var(--panel2);border-radius:50px;margin:10px 0 6px;overflow:hidden}
+.progressbar span{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--violet),var(--fel));transition:width .2s}
+.minor{margin:12px 10px 0;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:7px;padding:7px 11px;font-size:13px}
+.minor.armed{border-color:var(--ember);color:var(--ember)}
+main{min-width:0}
+.eyebrow{color:var(--violet);font-size:12px;text-transform:uppercase;letter-spacing:.22em;font-weight:800}
+.hero{border:1px solid var(--line);border-radius:18px;padding:34px 36px;background:radial-gradient(ellipse 60% 90% at 100% 0%,rgba(212,178,90,.13),transparent 70%),radial-gradient(ellipse 50% 80% at 0% 100%,rgba(143,199,160,.12),transparent 70%),var(--panel)}
+.hero h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,5vw,60px);line-height:1.05;margin:14px 0;letter-spacing:-.01em;text-wrap:balance;max-width:760px}
+.hero h1 em{font-style:normal;color:var(--fel)}
+.lead{font-size:17px;color:var(--muted);max-width:68ch;margin:0 0 22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:5px 12px;background:var(--panel2)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0 26px}
+.stat{border:1px solid var(--line);background:var(--panel);padding:15px 17px;border-radius:10px}
+.stat small{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em}
+.stat strong{display:block;color:var(--fel);font-family:var(--display);font-weight:400;font-size:22px;margin-top:4px}
+.stat span{color:var(--muted);font-size:13px}
+section.major{margin-top:44px;scroll-margin-top:16px}
+.sectionhead{border-bottom:1px solid var(--line);display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding-bottom:12px;margin-bottom:18px}
+.kicker{display:block;color:var(--violet);text-transform:uppercase;font-size:11px;letter-spacing:.2em;font-weight:800}
+.sectionhead h2{font-family:var(--display);font-weight:400;font-size:31px;margin:4px 0 0;line-height:1.2;text-wrap:balance}
+.sectionhead p{color:var(--muted);font-size:14px;max-width:420px;margin:0}
+.stack{display:grid;gap:14px}
+.chapter{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:21px 24px;scroll-margin-top:16px}
+.chapter-head{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.pill{color:var(--bg);background:var(--fel);padding:3px 11px;border-radius:20px;font-size:12px;font-weight:800;white-space:nowrap;font-family:var(--mono)}
+.pill.g{background:var(--violet)}.pill.h{background:var(--ember)}
+.zone{color:var(--muted);font-size:14px}
+.chapter h3{font-family:var(--display);font-weight:400;font-size:23px;margin:9px 0;text-wrap:balance}
+.explainer{color:var(--ink);opacity:.9;font-size:15.5px;margin:0 0 12px;max-width:80ch}
+.route{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:10px 0 14px}
+.route div{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.route b{color:var(--fel);font-size:11px;letter-spacing:.11em;font-weight:800}
+.route div:nth-child(2) b{color:var(--violet)}.route div:nth-child(3) b{color:var(--ember)}
+.route span{font-size:14px;line-height:1.5}
+.todo-list{display:grid;gap:5px}
+.todo{display:grid;grid-template-columns:26px 18px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:7px;border:1px solid transparent;cursor:pointer;font-size:15px;line-height:1.5}
+.todo:hover{border-color:var(--line);background:var(--panel2)}
+.todo input{accent-color:var(--fel);width:16px;height:16px;margin:3px 0 0}
+.todo input:checked+.t{opacity:.45;text-decoration:line-through}
+.n{font-family:var(--mono);color:var(--violet);font-size:13px;text-align:right;padding-top:2px}
+.caution{margin:14px 0 0;border-left:3px solid var(--warn);background:var(--panel2);padding:9px 13px;font-size:14px;border-radius:0 7px 7px 0}
+.caution strong{color:var(--warn)}
+.callout{background:var(--panel2);border:1px solid var(--fel-dim);border-radius:11px;padding:16px 20px;font-size:15px}
+.callout strong{color:var(--fel)}
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.card{border:1px solid var(--line);border-radius:11px;padding:18px 20px;background:var(--panel);min-width:0}
+.card h3{margin:0 0 8px;color:var(--ink);font-family:var(--display);font-weight:400;font-size:20px}
+.card p,.card li{font-size:15px;color:var(--ink);opacity:.9}
+.card p{margin:0}.card ul{padding-left:19px;margin:6px 0 0}
+.notegrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.num{font-family:var(--mono);color:var(--fel);font-size:13px}
+.routebar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:14px 0}
+.routebar span{padding:5px 10px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;font-size:13px}
+.routebar i{color:var(--fel);font-style:normal}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th{background:var(--panel2);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:800;padding:11px 13px;color:var(--muted)}
+td{border-top:1px solid var(--line);padding:10px 13px;vertical-align:top}
+td.lvl{font-family:var(--mono);color:var(--fel);white-space:nowrap;font-size:13px;font-variant-numeric:tabular-nums}
+td strong{font-weight:700}
+.tag{font-size:11px;display:inline-block;border-radius:99px;border:1px solid;padding:2px 8px;white-space:nowrap}
+.tag.new{border-color:var(--fel-dim);color:var(--fel)}.tag.old{border-color:var(--line);color:var(--muted)}
+tr[hidden]{display:none}
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 12px}
+.filter{border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--ink);font-size:13px;padding:6px 12px}
+.filter.active{background:var(--fel);color:var(--bg);border-color:var(--fel);font-weight:800}
+td .todo{padding:0;grid-template-columns:18px auto;border:0}td .todo:hover{background:none}
+.small{font-size:13.5px;color:var(--muted);margin-top:10px}
+.source-list{columns:2;column-gap:32px;font-size:14px;padding-left:20px}.source-list li{margin-bottom:7px;break-inside:avoid}
+.footer{margin-top:46px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+@media(max-width:1000px){.frame{grid-template-columns:200px minmax(0,1fr);gap:18px}.stats{grid-template-columns:repeat(2,1fr)}.notegrid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.frame{display:block}aside{position:static;max-height:none;margin-bottom:16px}aside nav{flex-direction:row;overflow-x:auto;gap:4px}aside a{white-space:nowrap}.logo small,.side-mini,.minor{display:none}.hero{padding:24px 20px}.sectionhead{display:block}.sectionhead p{margin-top:6px}.chapter{padding:17px 15px}.route,.columns,.notegrid{grid-template-columns:1fr}.source-list{columns:1}}
+</style>
+</head>
+<body data-guide="hunter" data-storage-key="wow-forever-hunter-guide-v1" data-guide-title="Night Elf Hunter 1–60">
+<div id="topbar"></div>
+<div class="frame">
+<aside>
+  <div class="logo">BOW &amp; BEAST<small>THE HUNTER FIELD GUIDE</small></div>
+  <nav>
+    <a href="../index.html">← All guides</a><a href="#overview">Overview &amp; countdown</a><a href="#rules">Rules &amp; race</a><a href="#spine">Where to quest</a><a href="#levels1">Levels 1–29</a><a href="#pets">Pets &amp; taming</a><a href="#levels2">Levels 29–51</a><a href="#levels3">Levels 50–60+</a><a href="#dungeons">All dungeons</a><a href="#spec">Spec &amp; spells</a><a href="#professions">Mining &amp; Engineering</a><a href="#classquests">Class quests</a><a href="#checkpoints">Calendar</a><a href="#sources">Sources</a>
+  </nav>
+  <div class="side-mini"><strong style="color:var(--fel)">Progress</strong><div class="progressbar"><span id="progressfill"></span></div><span id="progresslabel">0 tasks completed</span></div>
+  <button class="minor" id="reset-btn" type="button">Reset checks</button>
+</aside>
+
+<main>
+<header class="hero" id="overview">
+  <div class="eyebrow">World of Warcraft: Forever · Alliance · PvE · Route v1</div>
+  <h1>The Night Elf<br>Beast Mastery Hunter<br><em>1–60 Field Guide</em></h1>
+  <p class="lead">The full 1–60 journey with numbered checklists per stage, the taming chain and a pet plan for every stage, every planned dungeon, the Sunken Temple trinket quest, and a Mining + Engineering plan for your own guns, scopes and ammo.</p>
+  <div class="chips"><span class="chip">Night Elf Hunter</span><span class="chip">Beast Mastery leveling</span><span class="chip">Mining + Engineering</span><span class="chip">Target: 60 before December 9</span></div>
+</header>
+<div class="stats">
+  <div class="stat"><small>Forever launches in Denmark</small><strong>Nov 5 · 00:00</strong><span id="launch-counter">Calculating countdown…</span></div>
+  <div class="stat"><small>Raid unlock</small><strong>December 9</strong><span>Barrow Deeps · Hyjal · Onyxia</span></div>
+  <div class="stat"><small>First pet</small><strong>Level 10</strong><span>Three-part taming quest in Teldrassil</span></div>
+  <div class="stat"><small>Major breakpoint</small><strong>Level 20</strong><span>Aimed Shot · Cheetah · Freezing Trap</span></div>
+</div>
+
+<section class="major" id="rules">
+  <div class="sectionhead"><div><span class="kicker">Rules of the route</span><h2>How to use this plan</h2></div><p>Level bands are targets, not gates. Quest data is from beta and datamining; verify pickups on the live client.</p></div>
+  <div class="callout" style="margin-bottom:14px"><strong>Read each stage in order.</strong> Steps restart at 1 in every stage. Each stage says where you gain levels, what is only a quick errand, and when to leave. Checkboxes are saved in this browser only.</div>
+  <div class="columns">
+    <div class="card"><h3>Your pet does the tanking</h3><p>From 10 the pet holds the mob while you shoot. Keep it at your level (it only gains XP from kills), keep it fed and happy, and swap to a sturdier family around 16. In Forever pets scale with your gear: they inherit your crit and part of your Attack Power and armor.</p></div>
+    <div class="card"><h3>Solo vs dungeons</h3><p><strong>Solo:</strong> pet in first, Hunter's Mark, Serpent Sting, Arcane Shot, auto shot. <strong>Dungeons:</strong> put Growl on passive or off, use Freezing Trap on the dangerous mob, Multi-Shot only once the tank has threat, and Feign Death from 30 if a pull goes wrong.</p></div>
+    <div class="card"><h3>Ammo and bags</h3><p>Ammo, a quiver or ammo pouch, and pet food all take bag space. As an Engineer you shoot guns and can craft your own bullets from Mining, so carry a stack of ore or bars instead of buying ammo everywhere. Upgrade your ranged weapon at the vendor at about 3, 11, 14 and 16.</p></div>
+    <div class="card"><h3>Travel intelligently</h3><p>Use <strong>Auberdine ↔ Stormwind</strong>, the one-way <strong>Menethil → Southshore → Auberdine → Menethil</strong> loop, and the <strong>Gadgetzan ↔ Riverglades</strong> port. Aspect of the Cheetah at 20 is your speed boost until the mount at 40.</p></div>
+  </div>
+  <div class="callout" style="margin-top:14px"><strong>Forever Hunter changes that shape the route:</strong> Aimed Shot is baseline at 20 and shares a cooldown with Multi-Shot; Arcane Shot now shares one with the new Beast Mastery talent Summon Hawk. Traps work in combat (30-second cooldown per school, one Fire and one Frost trap at a time). Disengage drops twice as much threat. Auto Shot needs you to stand still for half a second. Pets can't get player buffs any more, every family learns Bite or Claw plus Dive or Dash, and Foxes are a new family. Dungeon quests give half their old bonus XP, so questing carries more of the load.</div>
+  <div class="columns" style="margin-top:14px">
+    <div class="card"><h3>Night Elf</h3><ul><li><strong>Elune's Light:</strong> +10% crit for 15 seconds, for you and your pet.</li><li><strong>Quickness:</strong> movement speed that stacks with Cheetah, plus dodge.</li><li><strong>Shadowmeld:</strong> 10-second cooldown out of combat, so you can eat and drink hidden.</li><li>Start: Teldrassil, Darnassus as hub.</li></ul></div>
+    <div class="card"><h3>Stat priority</h3><ul><li><strong>Agility</strong> first: Attack Power, crit, armor and dodge.</li><li>Hit up to about 9% against bosses at 60.</li><li>Attack Power, then crit (your pet inherits all of it).</li><li>Intellect and Spirit keep your mana up while leveling.</li></ul></div>
+  </div>
+</section>
+
+<section class="major" id="spine">
+  <div class="sectionhead"><div><span class="kicker">Questing spine</span><h2>Where you actually level</h2></div><p>The Night Elf route stays in Kalimdor until the mid-20s, then joins the Eastern Kingdoms route at Wetlands.</p></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Levels</th><th>Main XP zone</th><th>What you do there</th><th>Trips only</th></tr></thead>
+    <tbody>
+      <tr><td class="lvl">1–10</td><td><strong>Teldrassil</strong></td><td>Shadowglen, then Dolanaar.</td><td>Darnassus trainer and professions.</td></tr>
+      <tr><td class="lvl">10–11</td><td><strong>Teldrassil</strong></td><td>Taming chain from Dazalar; first pet.</td><td>Darnassus for Training the Beast.</td></tr>
+      <tr><td class="lvl">11–16</td><td><strong>Darkshore</strong></td><td>Auberdine hubs.</td><td>—</td></tr>
+      <tr><td class="lvl">16–18</td><td><strong>Eastern Kingdoms trip</strong></td><td>Hall of Thanes, Westfall, Deadmines.</td><td>Stormwind, Ironforge, Westfall.</td></tr>
+      <tr><td class="lvl">18–20</td><td><strong>Darkshore</strong></td><td>Finish the zone.</td><td>—</td></tr>
+      <tr><td class="lvl">20–24</td><td><strong>Ashenvale</strong></td><td>Main questing; BFD sits on its coast.</td><td>Stonetalon/Barrens only for Sleeping Bag clues.</td></tr>
+      <tr><td class="lvl">22–23</td><td><strong>Shadowfang Keep trip</strong></td><td>One quest-loaded run.</td><td>Menethil → Southshore ships.</td></tr>
+      <tr><td class="lvl">24–29</td><td><strong>Wetlands</strong></td><td>Menethil and excavation hubs.</td><td>Stockades, Excavation Site.</td></tr>
+      <tr><td class="lvl">29–33</td><td><strong>Hillsbrad / Arathi</strong></td><td>Quest between Gnomeregan and City of Dalaran.</td><td>Feign Death at 30.</td></tr>
+      <tr><td class="lvl">33–35</td><td><strong>STV / Arathi</strong></td><td>Mid-level hubs.</td><td>SM Graveyard and Library.</td></tr>
+      <tr><td class="lvl">35–44</td><td><strong>Riverglades (with STV)</strong></td><td>Main new questing zone.</td><td>SM Armory/Cathedral, Drowned City, RFD, Uldaman, Krol'dok.</td></tr>
+      <tr><td class="lvl">44–47</td><td><strong>Tanaris</strong></td><td>Gadgetzan hubs.</td><td>Zul'Farrak.</td></tr>
+      <tr><td class="lvl">47–51</td><td><strong>Shen'dralas / Feralas / Desolace</strong></td><td>One region at a time.</td><td>Maraudon, Alcaz Prison.</td></tr>
+      <tr><td class="lvl">50–53</td><td><strong>Azshara stop / Swamp of Sorrows</strong></td><td>The Hunter's Charm, then Sunken Temple.</td><td>Azshara, Sunken Temple.</td></tr>
+      <tr><td class="lvl">53–56</td><td><strong>Un'Goro / Burning Steppes</strong></td><td>Efficient quests.</td><td>BRD early and deep runs.</td></tr>
+      <tr><td class="lvl">55–60</td><td><strong>Felwood / Winterspring / Plaguelands</strong></td><td>Late hubs.</td><td>Dire Maul, Blackmaw Hold, LBRS, Shaper's Terrace, Strat/Scholo.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">Bands overlap because dungeons move you ahead. Orange/red quests: stay a little longer in the previous hub. Green and slow: move on.</p>
+</section>
+
+<section class="major" id="levels1">
+  <div class="sectionhead"><div><span class="kicker">The opening journey</span><h2>Levels 1–29</h2></div><p>Teldrassil, Darkshore and Ashenvale, with the taming chain and the first six dungeons.</p></div>
+  <div class="stack" data-chapters="early"></div>
+</section>
+
+<section class="major" id="pets">
+  <div class="sectionhead"><div><span class="kicker">Pet campaign</span><h2>Taming and the pet plan</h2></div><p>Which pet to use when, and how pets learn new abilities.</p></div>
+  <div class="routebar"><span>10 · Taming chain</span><i>→</i><span>10 · Webwood Silkspinner</span><i>→</i><span>~16 · Bear for tanking</span><i>→</i><span>20 · Training the Beast</span><i>→</i><span>30 · Dash via Wild Taming</span><i>→</i><span>40+ · Raid pet</span></div>
+  <div class="notegrid">
+    <div class="card"><span class="num">LVL 10</span><h3>Taming the Beast</h3><p>Dazalar, the Hunter trainer in Dolanaar, gives three quests. Each hands you a Taming Rod to tame one beast type: a spider, a nightsaber and a great forest owl in Teldrassil. Finishing all three teaches Tame Beast, Call Pet and Dismiss Pet.</p></div>
+    <div class="card"><span class="num">LVL 10–11</span><h3>Training the Beast</h3><p>Talk to Jocaste in the Cenarion Enclave, Darnassus. He teaches Feed Pet and Revive Pet and unlocks Beast Training. Tame your keeper right after.</p></div>
+    <div class="card"><span class="num">LVL 10</span><h3>First pet</h3><p>Guides recommend the <strong>Webwood Silkspinner</strong> in Teldrassil as the strongest early Night Elf pet. Spiders have their own unique ability (Web).</p></div>
+    <div class="card"><span class="num">LVL ~16</span><h3>Upgrade to a bear</h3><p>Many Hunters switch to a bear around 16 for its health and armor. Darkshore and Ashenvale have bears near your level. Stable the spider if you like it.</p></div>
+    <div class="card"><span class="num">TAMING RULES</span><h3>Before you tame</h3><p>You can only tame beasts at or below your level, with no active or dismissed pet. Your armor drops to zero while channeling, so drop a Freezing Trap or slow the beast first. Damaging it breaks the tame.</p></div>
+    <div class="card"><span class="num">PET ABILITIES</span><h3>Learning skills</h3><p>Tame a beast that already knows a skill, fight with it until you see "You have learned a new spell", then teach it to your main pet with Beast Training. Dash comes this way. Up to three pets with two bought stable slots.</p></div>
+  </div>
+</section>
+
+<section class="major" id="levels2">
+  <div class="sectionhead"><div><span class="kicker">The middle game</span><h2>Levels 29–51</h2></div><p>New Forever zones threaded through Classic dungeon quest packages. Feign Death at 30, mount and dual spec at 40.</p></div>
+  <div class="stack" data-chapters="mid"></div>
+</section>
+
+<section class="major" id="levels3">
+  <div class="sectionhead"><div><span class="kicker">The final push</span><h2>Levels 50–60+</h2></div><p>The Hunter's Charm, late leveling, pre-raid gear and preparation for December 9.</p></div>
+  <div class="stack" data-chapters="late"></div>
+</section>
+
+<section class="major" id="dungeons">
+  <div class="sectionhead"><div><span class="kicker">Dungeon tracker</span><h2>Every planned dungeon</h2></div><p>One prepared clear by default. Turn off Growl, trap the dangerous pull, and let the tank hold threat.</p></div>
+  <div class="filters"><button class="filter active" data-filter="all" type="button">Show all</button><button class="filter" data-filter="new" type="button">New Forever dungeons</button><button class="filter" data-filter="old" type="button">Classic dungeons</button></div>
+  <div class="tablewrap"><table><thead><tr><th>Target LV</th><th>Dungeon / wing</th><th>Type</th><th>Why a Hunter runs it</th><th>Done</th></tr></thead><tbody id="dungeon-body"></tbody></table></div>
+  <p class="small">Skipped on the core route: Ragefire Chasm, Wailing Caverns, Ruins of Lordaeron, Razorfen Kraul. Upper Blackrock Spire is post-60 raid prep.</p>
+</section>
+
+<section class="major" id="spec">
+  <div class="sectionhead"><div><span class="kicker">Spec &amp; spells</span><h2>Beast Mastery leveling build</h2></div><p>All three specs are viable; Beast Mastery is the preferred leveling spec. Re-check level-60 raid builds at launch.</p></div>
+  <div class="columns">
+    <div class="card"><h3>Talent path</h3><ul>
+      <li>10–24: Endurance Training (pet health and armor), Focused Fire, Pathfinding</li>
+      <li>25: <strong>Summon Hawk</strong> (up to two hawks, shares a cooldown with Arcane Shot)</li>
+      <li>Unleashed Fury and Bestial Swiftness</li>
+      <li>30: <strong>Intimidation</strong> (next pet attack always crits)</li>
+      <li>31+: Ferocity, Bestial Discipline, 4 points in Frenzy</li>
+      <li>40: <strong>Bestial Wrath</strong></li>
+      <li>Then Marksmanship: Lethal Attacks, Careful Aim, Trueshot Aura</li>
+    </ul><p style="margin-top:8px">Point totals change with Legacy talents; check the trainer's calculator at launch.</p></div>
+    <div class="card"><h3>Pull pattern</h3><p>Send the pet in and let it build threat. Hunter's Mark, Serpent Sting, then Arcane Shot and auto shot; from 25 keep two hawks out. Aimed Shot on single targets, Multi-Shot on packs. Raptor Strike if a mob reaches you, or Disengage. Keep Aspect of the Hawk up while fighting and Cheetah only while traveling.</p></div>
+  </div>
+  <div class="tablewrap" style="margin-top:14px"><table><thead><tr><th>Level</th><th>Spell</th><th>Why it matters</th></tr></thead><tbody>
+    <tr><td class="lvl">1–8</td><td><strong>Raptor Strike, Serpent Sting, Arcane Shot, Hunter's Mark, Concussive Shot</strong></td><td>Your solo kit before the pet.</td></tr>
+    <tr><td class="lvl">10</td><td><strong>Aspect of the Hawk, Tame Beast, Call Pet</strong></td><td>The pet changes everything; talents begin.</td></tr>
+    <tr><td class="lvl">12</td><td><strong>Mend Pet</strong></td><td>Keep the pet alive instead of resting.</td></tr>
+    <tr><td class="lvl">16–18</td><td><strong>Immolation Trap, Multi-Shot</strong></td><td>Traps work in combat in Forever.</td></tr>
+    <tr><td class="lvl">20</td><td><strong>Aimed Shot, Aspect of the Cheetah, Freezing Trap</strong></td><td>Aimed Shot is baseline in Forever.</td></tr>
+    <tr><td class="lvl">25–28</td><td><strong>Summon Hawk (talent), Rapid Fire, Frost Trap</strong></td><td>Burst and kiting.</td></tr>
+    <tr><td class="lvl">30</td><td><strong>Feign Death, Intimidation (talent)</strong></td><td>Feign Death drops you out of combat.</td></tr>
+    <tr><td class="lvl">40</td><td><strong>Bestial Wrath (talent), Dual Specialization, Riding</strong></td><td>Riding is about 100g.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section class="major" id="professions">
+  <div class="sectionhead"><div><span class="kicker">Crafting, economy &amp; gear</span><h2>Mining + Engineering</h2></div><p>Mining feeds Engineering. Engineering makes your gun, scopes, bullets and bombs.</p></div>
+  <div class="columns">
+    <div class="card"><h3>Trainer recipes for a Hunter</h3><ul>
+      <li><strong>Guns:</strong> Rough Boomstick (skill 50), Deadly Blunderbuss (105), Silver-Plated Shotgun (130), Mithril Blunderbuss (205).</li>
+      <li><strong>Scopes:</strong> Crude Scope (60), Standard Scope (110), Ornate Spyglass (135). Accurate Scope (180) and Deadly Scope (210) come from vendors.</li>
+      <li><strong>Bullets:</strong> Crafted Light Shot (30), Heavy Shot (75), Solid Shot (125), Hi-Impact Mithril Slugs (210).</li>
+      <li><strong>Goggles:</strong> Flying Tiger Goggles (100), Green Tinted Goggles (150), Fire Goggles (205).</li>
+      <li>Drops worth watching: Moonsight Rifle (145), Mithril Heavy-bore Rifle (220), Sniper Scope (240), Thorium Shells (285).</li>
+    </ul></div>
+    <div class="card"><h3>Fritz Fizzle (Three Corners, Redridge)</h3><ul>
+      <li>45 Merchant's Favor each: SAF-T Dynamite and Tabs (skill 25), SAF-T Copper Bomb (55), <strong>Satchel of Copper Bombs</strong> (85).</li>
+      <li>Then EZ-Thro Wrap (100) and EZ-Thro Copper Bomb XL (130).</li>
+      <li>Friendly, 180 Favor: Clanking Cord and Gizmo Girdle belts (175), four goggles (200).</li>
+      <li>Honored, 270–360 Favor: Emergency Field Cloak, Ultralight Goblin Glider.</li>
+      <li>Gnomish or Goblin specialization at 200 through a quest chain; switching later is expensive.</li>
+    </ul></div>
+  </div>
+  <div class="callout" style="margin-top:14px"><strong>Satchel bombs use the thrown slot, which a Hunter's ranged weapon already fills.</strong> Before you spend Favor on them, check in game whether you can throw them while your gun is equipped. If not, put the Favor into belts and goggles instead.</div>
+  <div class="tablewrap" style="margin-top:14px"><table><thead><tr><th>Upgrade order</th><th>Skill</th><th>Note</th></tr></thead><tbody>
+    <tr><td>Rough Boomstick + Crude Scope</td><td class="lvl">50–60</td><td>Your first self-made gun, around level 10–14</td></tr>
+    <tr><td>Crafted Heavy Shot</td><td class="lvl">75</td><td>Make your own ammo from here</td></tr>
+    <tr><td>Deadly Blunderbuss + Standard Scope</td><td class="lvl">105–110</td><td>Around level 20</td></tr>
+    <tr><td>Silver-Plated Shotgun or Moonsight Rifle</td><td class="lvl">130–145</td><td>Mid-20s to 30</td></tr>
+    <tr><td>Accurate Scope, Mithril Blunderbuss</td><td class="lvl">180–205</td><td>Mid-30s to 40</td></tr>
+    <tr><td>Deadly Scope, Hi-Impact Mithril Slugs</td><td class="lvl">210</td><td>40s</td></tr>
+  </tbody></table></div>
+  <div class="callout" style="margin-top:14px"><strong>Merchant's Favor:</strong> loot Waylaid Crates while questing, fill them and hand them to Marcy Baker in Three Corners (your first crate also starts a quest worth 50 Favor). <strong>Gold:</strong> riding costs about 100g at 40. Sell spare ore and bars as you level.</div>
+</section>
+
+<section class="major" id="classquests">
+  <div class="sectionhead"><div><span class="kicker">Hunter progression</span><h2>Class quest checklist</h2></div><p>Each chain timed to a trip you already make.</p></div>
+  <div class="tablewrap"><table><thead><tr><th>Level</th><th>Quest / reward</th><th>How it fits</th></tr></thead><tbody>
+    <tr><td class="lvl">10</td><td><strong>The Hunter's Path → Taming the Beast (×3)</strong>: Tame Beast, Call Pet</td><td>Dazalar in Dolanaar, all in Teldrassil</td></tr>
+    <tr><td class="lvl">10</td><td><strong>Training the Beast</strong>: Feed Pet, Revive Pet</td><td>Jocaste in Darnassus</td></tr>
+    <tr><td class="lvl">50–53</td><td><strong>The Hunter's Charm → Courser Antlers → Wavethrashing → The Green Drake</strong>: Devilsaur Eye</td><td>Azshara, then Morphaz in Sunken Temple</td></tr>
+    <tr><td class="lvl">60+</td><td><strong>Rhok'delar</strong> (Ancient Petrified Leaf)</td><td>Classic drop from Molten Core; not confirmed in Forever's launch raids</td></tr>
+  </tbody></table></div>
+  <p class="small">The level-50 chain follows its Classic version. Ask your trainer at 50 in case Forever changed it.</p>
+</section>
+
+<section class="major" id="checkpoints">
+  <div class="sectionhead"><div><span class="kicker">Real-world timeline</span><h2>The race to December 9</h2></div><p>Indicative checkpoints; your pace depends on groups and travel.</p></div>
+  <div class="tablewrap"><table><thead><tr><th>When (Denmark)</th><th>Milestone</th><th>What matters</th></tr></thead><tbody>
+    <tr><td class="lvl">Nov 5</td><td><strong>Launch at midnight CET</strong></td><td>Night Elf Hunter, Mining + Engineering, Teldrassil</td></tr>
+    <tr><td class="lvl">Nov 6–8</td><td><strong>8 hours/day weekend</strong></td><td>Stretch target ~24–26 with your pet and first gun</td></tr>
+    <tr><td class="lvl">Nov 20–21</td><td><strong>Roughly level 44</strong></td><td>Halfway in time, not in levels</td></tr>
+    <tr><td class="lvl">Dec 6–7</td><td><strong>Personal level-60 target</strong></td><td>Two days for pre-raid gear and logistics</td></tr>
+    <tr><td class="lvl">Dec 9</td><td><strong>Raids unlock</strong></td><td>Barrow Deeps, Hyjal Summit, Onyxia's Lair</td></tr>
+  </tbody></table></div>
+  <p class="small">The ~150–170 played-hours budget is a working estimate, not a verified Forever average. Reassess after the first weekend.</p>
+</section>
+
+<section class="major" id="sources">
+  <div class="sectionhead"><div><span class="kicker">Research notes</span><h2>Sources and launch caveats</h2></div><p>Quests and talents above level 30 were not playable in the beta.</p></div>
+  <div class="card"><p>Pet, talent and ability changes come from Blizzard's deep dive and beta guides. The exact Teldrassil taming targets and their positions vary between sources, so follow Dazalar's quest text. The level-50 chain follows its Classic version.</p>
+  <ol class="source-list">
+    <li><a href="https://www.warcrafttavern.com/forever/news/powershifting-is-back-sort-of-hunter-druid-deep-dive-for-wow-forever/" target="_blank" rel="noopener noreferrer">Blizzard Hunter &amp; Druid deep dive</a></li>
+    <li><a href="https://www.method.gg/wow-forever/wow-forever-hunter-leveling-guide-and-talents" target="_blank" rel="noopener noreferrer">Hunter leveling &amp; talents (Method)</a></li>
+    <li><a href="https://conquestcapped.com/guides/wow-forever/wow-forever-hunter-leveling/" target="_blank" rel="noopener noreferrer">Hunter leveling (ConquestCapped)</a></li>
+    <li><a href="https://www.warcrafttavern.com/forever/guides/hunter-pets/" target="_blank" rel="noopener noreferrer">Hunter pets: taming, leveling &amp; happiness</a></li>
+    <li><a href="https://warcrafttavern.com/forever/guides/hunter/" target="_blank" rel="noopener noreferrer">Hunter overview (Warcraft Tavern)</a></li>
+    <li><a href="https://warcraft.wiki.gg/wiki/Taming_the_Beast_quest_chain_(night_elf)" target="_blank" rel="noopener noreferrer">Night Elf taming chain</a></li>
+    <li><a href="https://www.icy-veins.com/wow-classic/hunter-quests-in-wow-classic" target="_blank" rel="noopener noreferrer">Hunter's Charm chain</a></li>
+    <li><a href="https://warcraft.wiki.gg/wiki/Forever_engineering_schematics" target="_blank" rel="noopener noreferrer">Forever engineering schematics</a></li>
+    <li><a href="https://www.wow-professions.com/forever/npc/fritz-fizzle" target="_blank" rel="noopener noreferrer">Fritz Fizzle, engineering vendor</a></li>
+    <li><a href="https://www.wow-professions.com/forever/merchants-favor-durotar-supply-azeroth-commerce" target="_blank" rel="noopener noreferrer">Merchant's Favor and trade camps</a></li>
+    <li><a href="https://worldofwarcraft.blizzard.com/en-us/news/24301455" target="_blank" rel="noopener noreferrer">Official dungeon brackets</a></li>
+    <li><a href="https://worldofwarcraft.blizzard.com/en-us/news/24303009/world-of-warcraft-forever-raid-overview-locations-raid-sizes-and-attunement" target="_blank" rel="noopener noreferrer">Official first raids</a></li>
+  </ol></div>
+</section>
+<div class="footer">WoW: Forever · Night Elf Beast Mastery Hunter roadmap · Route v1, 2 November 2026 · Checklist progress is stored in this browser.</div>
+</main>
+</div>
+
+<script>
+(function(){
+const C={
+early:[
+ {id:"a1",pill:"LVL 01–10",zone:"Shadowglen / Dolanaar / Darnassus",title:"Teldrassil: before the pet",text:"Quest Shadowglen, then Dolanaar. Until 10 you fight alone: Hunter's Mark, auto shot, Serpent Sting from 4 and Arcane Shot from 6, with Raptor Strike when a mob reaches you. Learn Mining and Engineering at 5.",q:"Shadowglen, then Dolanaar and the rest of Teldrassil",t:"Darnassus for trainers and professions",m:"At 10, start the taming chain.",s:[
+  "Quest Shadowglen to about 6, then move to Dolanaar.",
+  "At 5, learn Mining and Engineering and buy a Mining Pick and Blacksmith Hammer.",
+  "Mine copper on your quest routes; smelt it and make Rough Blasting Powder and Copper Bolts.",
+  "Buy a better bow or gun at the vendor around level 3 and keep ammo topped up.",
+  "Loot and fill Waylaid Crates for Merchant's Favor as they drop."]},
+ {id:"a2",pill:"LVL 10–11",zone:"Dolanaar → Teldrassil → Darnassus",title:"Taming the Beast and your first pet",text:"Dazalar's three quests each give you a Taming Rod for one beast type. Tamed quest beasts can't be kept, so tame your real pet after Training the Beast.",q:"Finish Teldrassil quests around the chain",t:"Darnassus for Jocaste",m:"Pet tamed; move to Darkshore.",s:[
+  "Take The Hunter's Path and talk to Dazalar, the Hunter trainer in Dolanaar.",
+  "Taming the Beast 1: use the Taming Rod on the spider Dazalar names.",
+  "Taming the Beast 2: tame the nightsaber he names.",
+  "Taming the Beast 3: tame the great forest owl he names; return for Tame Beast and Call Pet.",
+  "Training the Beast: talk to Jocaste in the Cenarion Enclave, Darnassus, for Feed Pet and Revive Pet.",
+  "Tame a Webwood Silkspinner as your first real pet and buy food it likes.",
+  "Spend your first talent points in Beast Mastery."]},
+ {id:"a3",pill:"LVL 11–16",zone:"Darkshore / Auberdine",title:"Darkshore",text:"Darkshore is your main zone. Let the pet pull every mob, and keep it at your level: pets only gain XP from kills. Build your first gun as soon as Engineering allows it.",q:"Darkshore from Auberdine",t:"—",m:"At ~16, the Eastern Kingdoms trip.",s:[
+  "Quest Darkshore from Auberdine; set your hearthstone there.",
+  "Train Mend Pet at 12.",
+  "At Engineering 50–60, craft a Rough Boomstick and Crude Scope.",
+  "At Engineering 75, start making Crafted Heavy Shot for your own ammo.",
+  "Around 16, tame a bear for tanking (or keep the spider and stable it later)."]},
+ {id:"a4",pill:"LVL 16–18",zone:"Stormwind / Ironforge / Westfall",title:"Eastern Kingdoms trip: Hall of Thanes, Westfall, Deadmines",text:"One trip for the first two dungeons. Collect the Stormwind and Ironforge flight paths on the way. Turn Growl off on your pet in groups.",q:"Westfall quests while you wait for a Deadmines group",t:"Ironforge (Hall of Thanes), Deadmines",m:"Back to Auberdine around 18.",s:[
+  "Take the Auberdine → Stormwind ship; get the Stormwind flight path and tram to Ironforge.",
+  "Do Earthseer Farsen's Dark Iron Map prerequisite at Gol'Bolar Quarry (Dun Morogh ~64.9, 58.5) and gather Hall of Thanes quests.",
+  "Run Hall of Thanes with Growl turned off.",
+  "Quest Westfall around Sentinel Hill and collect all Deadmines quests.",
+  "Run Deadmines at about 18; loot The Unsent Letter for Stockades later.",
+  "Optional: start Cozy Sleeping Bag at Alexston Farmstead (Westfall ~37.4, 50.7)."]},
+ {id:"a5",pill:"LVL 18–20",zone:"Darkshore / Darnassus",title:"Darkshore to 20 and the level-20 spike",text:"Finish Darkshore. At 20 you get Aimed Shot, Aspect of the Cheetah and Freezing Trap, which make both questing and travel much faster.",q:"Darkshore",t:"Darnassus trainer",m:"Ashenvale at 20.",s:[
+  "Finish Darkshore quests to 20.",
+  "Train Multi-Shot at 18; Aimed Shot, Aspect of the Cheetah and Freezing Trap at 20.",
+  "At Engineering 105–110, craft a Deadly Blunderbuss and Standard Scope.",
+  "Turn in filled crates when you pass Three Corners; Favor buys your first schematics."]},
+ {id:"a6",pill:"LVL 20–24",zone:"Ashenvale / Zoram Strand",title:"Ashenvale and Blackfathom Deeps",text:"Ashenvale is the natural Night Elf zone after Darkshore. BFD is on its coast at Zoram Strand, so it fits without travel.",q:"Ashenvale: Astranaar and Maestra's Post hubs",t:"BFD; Stonetalon/Barrens only for optional Sleeping Bag clues",m:"At ~22–23, the SFK trip.",s:[
+  "Quest Ashenvale from Astranaar; get the flight path.",
+  "Gather BFD quests in Auberdine and Astranaar.",
+  "Run Blackfathom Deeps at about 23–24.",
+  "Optional Sleeping Bag: Barrens clue (~46.4, 73.9) and Stonetalon camp (~40.6, 52.4) are close to Ashenvale."]},
+ {id:"a7",pill:"LVL 22–24",zone:"Auberdine → Menethil → Southshore → Silverpine",title:"Shadowfang Keep",text:"One quest-loaded run. The ship loop also collects the Menethil and Southshore flight paths you'll need for Wetlands.",q:"Ashenvale until you leave",t:"Ships and the dungeon",m:"Wetlands at ~24.",s:[
+  "Take the ship to Menethil, then Menethil → Southshore.",
+  "Collect SFK quests and run Shadowfang Keep.",
+  "Optional: Thoradin's Wall (~87.3, 49.6) for the Sleeping Bag if your chain is ready.",
+  "Return to Menethil to start Wetlands."]},
+ {id:"a8",pill:"LVL 24–29",zone:"Wetlands / Stormwind",title:"Wetlands, Stockades, Excavation Site",text:"From here the route joins the Eastern Kingdoms spine. Summon Hawk at 25 is a big damage boost. Stockades needs the Unsent Letter chain from Deadmines.",q:"Wetlands: Menethil and excavation hubs",t:"Stockades in Stormwind; Excavation Site",m:"At ~29, Hillsbrad/Arathi.",s:[
+  "Quest Wetlands from Menethil.",
+  "At 25, take Summon Hawk; train Rapid Fire at 26 and Frost Trap at 28.",
+  "Finish the Unsent Letter chain in Stormwind and run Stockades at about 26.",
+  "Collect Excavation Site quests and run it at about 27.",
+  "Move on to Hillsbrad/Arathi at 29."]}
+],
+mid:[
+ {id:"b1",pill:"LVL 29–33",zone:"Hillsbrad / Arathi / Dun Morogh / Alterac",title:"Feign Death, Gnomeregan, City of Dalaran",text:"Quest Hillsbrad and Arathi between two dungeon trips. Feign Death at 30 is your escape and threat drop.",q:"Hillsbrad and Arathi",t:"Gnomeregan via Ironforge; City of Dalaran in Alterac",m:"Toward 33 in STV/Arathi.",s:[
+  "At 30, train Feign Death and take Intimidation.",
+  "Teach your pet Dash: tame a beast that knows it, fight until you learn it, then train your main pet.",
+  "Gather Gnomeregan quests and run it at 30–31.",
+  "Run City of Dalaran at 31–32 and take the best Agility reward.",
+  "Craft a Silver-Plated Shotgun at Engineering 130, or use a Moonsight Rifle (145) if it drops."]},
+ {id:"b2",pill:"LVL 33–39",zone:"STV / Arathi / Riverglades",title:"Scarlet Monastery + early Riverglades",text:"Run the four SM wings as quests and groups allow. From about 35, Riverglades is the main questing zone.",q:"33–35 STV/Arathi; 35–39 Riverglades",t:"Scarlet Monastery wings",m:"Near 38 for Drowned City.",s:[
+  "Quest STV/Arathi at 33–35 and collect SM quests.",
+  "Run SM Graveyard (~33–34) and Library (~34–35).",
+  "Move to Riverglades at 35–36.",
+  "Fit SM Armory (~36–37) and Cathedral (~37–39) around questing.",
+  "Buy the Accurate Scope schematic (skill 180) from a vendor when you reach it."]},
+ {id:"b3",pill:"LVL 38–41",zone:"STV / Darnassus or Stormwind",title:"Drowned City, mount and dual spec",text:"Level 40 is a big stop: Bestial Wrath, Dual Specialization and Riding. Hunters have no class mount, so Riding is a real gold cost.",q:"Riverglades/STV",t:"Trainer and riding trainer visit at 40",m:"Back to Riverglades.",s:[
+  "Run The Drowned City on the STV coast at about 38.",
+  "Quest Riverglades/STV to 40.",
+  "At 40: Bestial Wrath, Dual Specialization and Riding (~100g) with your mount.",
+  "Set a Marksmanship spec as your second spec if you plan to raid without a pet focus.",
+  "At Engineering 200, choose Gnomish or Goblin."]},
+ {id:"b4",pill:"LVL 40–44",zone:"Riverglades / Barrens / Badlands",title:"RFD, Uldaman, Krol'dok",text:"Riverglades stays home base. Craft the Mithril Blunderbuss (205) and Deadly Scope (210) as your skill allows.",q:"Riverglades; Badlands for Uldaman quests",t:"RFD, Uldaman, Krol'dok",m:"At ~44, Tanaris.",s:[
+  "Run Razorfen Downs at 39–41.",
+  "Collect Uldaman quests and run it at about 42.",
+  "Run Krol'dok Stronghold at 42–43 and finish Riverglades chains.",
+  "Switch to Hi-Impact Mithril Slugs at Engineering 210."]},
+ {id:"b5",pill:"LVL 44–47",zone:"Tanaris / Feralas",title:"Zul'Farrak and Tanaris",text:"Do the Gadgetzan chains first, then one quest-loaded Zul'Farrak clear. Feign Death and Frost Trap save the stairs event.",q:"Tanaris, then Shen'dralas/Feralas",t:"Zul'Farrak",m:"Maraudon prep at ~47.",s:[
+  "Quest Tanaris from 44 to 46.",
+  "Run Zul'Farrak with its quests.",
+  "Move toward Shen'dralas/Feralas when quests fit.",
+  "Gather Maraudon prerequisites around 47."]},
+ {id:"b6",pill:"LVL 47–51",zone:"Desolace / Feralas / Dustwallow",title:"Maraudon + Alcaz Prison",text:"Consolidate Maraudon wings at 48–51, then the new Alcaz Prison on Alcaz Island.",q:"Shen'dralas/Feralas/Desolace",t:"Maraudon, Alcaz Prison",m:"The Hunter's Charm at ~50.",s:[
+  "Quest one region at a time from 47.",
+  "Run Maraudon wings including Princess around 48–51.",
+  "Run Alcaz Prison at 50–51.",
+  "At 50, accept The Hunter's Charm from your trainer."]}
+],
+late:[
+ {id:"c1",pill:"LVL 50–53",zone:"Azshara → Swamp of Sorrows",title:"The Hunter's Charm and Sunken Temple",text:"Ogtinc's chain needs two Azshara errands before Morphaz counts, so do them first and then run Sunken Temple once for both the dungeon quests and the trinket.",q:"Swamp of Sorrows as needed",t:"Azshara (Ogtinc), Sunken Temple",m:"Un'Goro/Burning Steppes.",s:[
+  "Accept The Hunter's Charm and talk to Ogtinc in Azshara.",
+  "Courser Antlers: two Perfect Courser Antlers from Mosshoof Coursers in northern and southern Azshara.",
+  "Wavethrashing: six Wavethrasher Scales from Wavethrasher Hydras on the far northeast and southeast shores.",
+  "Collect the normal Sunken Temple quests.",
+  "Run Sunken Temple at about 52–53 and loot the Tooth of Morphaz from the green drake.",
+  "Return to Ogtinc for The Green Drake and the Devilsaur Eye trinket."]},
+ {id:"c2",pill:"LVL 52–56",zone:"Un'Goro / Burning Steppes / Searing Gorge",title:"Un'Goro + Blackrock Depths",text:"Un'Goro is a dense quest cluster. Split BRD into an early prison trip and a deeper run.",q:"Un'Goro first, then Burning Steppes / Searing Gorge",t:"BRD",m:"Felwood/Winterspring at 55–56.",s:[
+  "Quest Un'Goro, then Burning Steppes and Searing Gorge.",
+  "Finish BRD prerequisites before the first run.",
+  "Run early BRD at 53–54.",
+  "Return for deeper BRD at 55–56 for quests and gear."]},
+ {id:"c3",pill:"LVL 55–58",zone:"Felwood / Azshara / Feralas / Blackrock",title:"Dire Maul, Blackmaw Hold, LBRS",text:"Pre-raid gearing starts here. Watch for the Thorium Rifle and Dark Iron Rifle schematics as drops.",q:"Felwood or Winterspring between runs",t:"Dire Maul, Blackmaw Hold, LBRS",m:"Final 58–60 phase.",s:[
+  "Quest Felwood/Winterspring between runs.",
+  "Run Dire Maul East around 55–57.",
+  "Run Blackmaw Hold in northern Azshara at 56–58.",
+  "Run Lower Blackrock Spire at 57–59."]},
+ {id:"c4",pill:"LVL 58–60",zone:"Un'Goro / EPL / Winterspring",title:"Shaper's Terrace + endgame dungeons",text:"Run Shaper's Terrace around 59, then pick Scholomance, Stratholme or Dire Maul by the gear you still need.",q:"Eastern Plaguelands, Winterspring",t:"Shaper's Terrace, Scholo, Strat, DM",m:"60 with time to prepare.",s:[
+  "Use EPL/Winterspring hubs for the last XP.",
+  "Run Shaper's Terrace around 59.",
+  "Start Scholomance and Stratholme clears for pre-raid gear.",
+  "Don't chase optional schematics if they threaten the Dec 6–7 target."]},
+ {id:"c5",pill:"LVL 60",zone:"Mount Hyjal / capitals",title:"Raid prep",text:"Finish gear, pick your raid pet, and stock ammo and consumables for December 9.",q:"Mount Hyjal for endgame questing",t:"Dungeons for missing pieces",m:"Raid-ready before Dec 9.",s:[
+  "Quest Mount Hyjal and check raid access requirements.",
+  "Finish gear for your raid spec and level your raid pet to 60.",
+  "Craft Thorium Shells if you have the schematic; otherwise stock the best ammo you can buy.",
+  "Be ready for Barrow Deeps, Hyjal Summit and Onyxia from December 9."]}
+]};
+
+const D=[["14–17","Hall of Thanes","new","Eastern Kingdoms trip; pick an Agility reward"],["18","Deadmines","old","Quest package; Unsent Letter"],["22–24","Shadowfang Keep","old","Quest package; Menethil/Southshore flight paths"],["23–24","Blackfathom Deeps","old","On the Ashenvale coast, no extra travel"],["26","Stockades","old","Unsent Letter / Stockade Riots chain"],["27","Excavation Site: Wetlands","new","Quest-loaded Wetlands run"],["30–31","Gnomeregan","old","Quest package; Engineering flavor"],["31–32","City of Dalaran","new","Quest package and rewards"],["33–34","Scarlet Monastery: Graveyard","old","Quest/timing dependent"],["34–35","Scarlet Monastery: Library","old","Quest/timing dependent"],["36–37","Scarlet Monastery: Armory","old","Quest/timing dependent"],["37–39","Scarlet Monastery: Cathedral","old","Quest/timing dependent"],["38","The Drowned City","new","STV coast quest package"],["39–41","Razorfen Downs","old","Quest package"],["42","Uldaman","old","Badlands / Ironforge quest chains"],["42–43","Krol'dok Stronghold","new","Riverglades questline"],["44–46","Zul'Farrak","old","Gadgetzan quest package"],["48–51","Maraudon","old","Wings + Princess"],["50–51","Alcaz Prison","new","Alcaz Island"],["52–53","Sunken Temple","old","Tooth of Morphaz for the Devilsaur Eye"],["53–56","Blackrock Depths","old","Two phased runs"],["55–58","Dire Maul (East/West/North)","old","Pre-raid gear"],["56–58","Blackmaw Hold","new","Northern Azshara"],["57–59","Lower Blackrock Spire","old","Gear + quests"],["59","Shaper's Terrace","new","Un'Goro late push"],["58–60+","Scholomance","old","Pre-raid gear"],["58–60+","Stratholme (both sides)","old","Pre-raid gear"]];
+
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+document.querySelectorAll("[data-chapters]").forEach(box=>{
+  box.innerHTML=C[box.dataset.chapters].map(c=>`<article class="chapter" id="${c.id}">
+  <div class="chapter-head"><span class="pill ${c.cls||""}">${c.pill}</span><span class="zone">${esc(c.zone)}</span></div>
+  <h3>${esc(c.title)}</h3><p class="explainer">${esc(c.text)}</p>
+  <div class="route"><div><b>QUEST HERE</b><span>${esc(c.q)}</span></div><div><b>TRAVEL / ERRAND ONLY</b><span>${esc(c.t)}</span></div><div><b>MOVE ON WHEN</b><span>${esc(c.m)}</span></div></div>
+  <div class="todo-list">${c.s.map((s,i)=>`<label class="todo"><span class="n" aria-hidden="true">${i+1}.</span><input type="checkbox" id="${c.id}-${i}" data-task="${c.id}-${i}"><span class="t">${esc(s)}</span></label>`).join("")}</div></article>`).join("");
+});
+document.getElementById("dungeon-body").innerHTML=D.map((d,i)=>`<tr data-kind="${d[2]}"><td class="lvl">${d[0]}</td><td><strong>${esc(d[1])}</strong></td><td><span class="tag ${d[2]}">${d[2]==="new"?"New":"Classic"}</span></td><td>${esc(d[3])}</td><td><label class="todo"><input type="checkbox" id="dungeon-${i}" data-task="dungeon-${i}"><span class="t">Done</span></label></td></tr>`).join("");
+const rows=[...document.querySelectorAll("tr[data-kind]")];
+document.querySelectorAll(".filter").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");rows.forEach(r=>r.hidden=b.dataset.filter!=="all"&&r.dataset.kind!==b.dataset.filter)}));
+const launch=new Date("2026-11-04T23:00:00Z");
+function cd(){let s=Math.floor((launch-Date.now())/1000);const el=document.getElementById("launch-counter");if(s<=0){el.textContent="Launched. Good hunting!";return}const d=Math.floor(s/86400);s%=86400;const h=Math.floor(s/3600);s%=3600;el.textContent=d+" days · "+h+" hours · "+Math.floor(s/60)+" min"}
+cd();setInterval(cd,30000);
+})();
+</script>
+<script src="../assets/progress.js"></script>
+
+</body>
+</html>
